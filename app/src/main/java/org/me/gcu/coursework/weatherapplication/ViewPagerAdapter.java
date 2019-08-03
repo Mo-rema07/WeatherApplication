@@ -15,11 +15,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return new SummaryFragment(i);
+        return new SummaryFragment();
     }
 
     @Override
     public int getCount() {
         return WeatherLocationRepository.getInstance().getLocationList().size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        String title = getItem(position).getClass().getName();
+        return title.subSequence(title.lastIndexOf(".") + 1, title.length());
     }
 }

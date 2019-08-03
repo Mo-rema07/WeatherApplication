@@ -15,9 +15,6 @@ import java.util.List;
 public class SummaryFragment extends Fragment {
     int position;
 
-    public SummaryFragment(int position) {
-        this.position = position;
-    }
 
     @Nullable
     @Override

@@ -101,14 +101,14 @@ public class XMLParser {
 
     private static List<DailyForecast> readItem(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        List<DailyForecast> forecasts = new ArrayList<DailyForecast>();
+        List<DailyForecast> forecasts = new ArrayList<>();
+        String description = "";
+        String title = "";
         parser.require(XmlPullParser.START_TAG, ns, "item");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
-            String description = "";
-            String title = "";
             String name = parser.getName();
             if (name.equals("title")) {
                 title = readText(parser);
@@ -141,7 +141,7 @@ public class XMLParser {
             return "";
         }
         else{
-            String[] listOfProps = title.split(",");
+            String[] listOfProps = title.split(", ");
             String[] today = listOfProps[0].split(":");
             return today[1];
         }
@@ -155,7 +155,7 @@ public class XMLParser {
             return null;
         }
         else {
-            String[] listOfProps = des.split(",");
+            String[] listOfProps = des.split(", ");
             int length = listOfProps.length;
             for (int i = 0; i < length; i++) {
                 String[] prop = listOfProps[i].split(":");
