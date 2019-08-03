@@ -17,15 +17,15 @@ public class WeatherLocationRepository {
         return mInstance;
     }
 
-    public static List<WeatherLocation> getLocationList() {
+    public  List<WeatherLocation> getLocationList() {
         return locationList;
     }
 
-    public static void setLocationList(List<WeatherLocation> locationList) {
+    public void setLocationList(List<WeatherLocation> locationList) {
         WeatherLocationRepository.locationList = locationList;
     }
 
-    public static void add(WeatherLocation location){
+    public void add(WeatherLocation location){
         locationList.add(location);
     }
 }
