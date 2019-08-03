@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         new LoadXML().execute(ENDPOINT);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CustomPagerAdapter(this));
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 
     }
 
@@ -44,14 +44,14 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             for( String loc : location_ids.keySet()){
                 WeatherLocation location = XMLParser.loadXmlFromInternet(urls[0] + location_ids.get(loc),loc);
-                WeatherLocationRepository.add(location);
+                WeatherLocationRepository.getInstance().add(location);
             }
             System.out.println("Completed!");
             return "Completed! hurray!";
         }
 
         protected void onPostExecute(String result) {
-            List<WeatherLocation> list = WeatherLocationRepository.getLocationList();
+            List<WeatherLocation> list = WeatherLocationRepository.getInstance().getLocationList();
             for (int i = 0; i < list.size() ; i++) {
                 System.out.println(list.get(i).getName());
             }
