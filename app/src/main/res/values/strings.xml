@@ -10,4 +10,5 @@
     <string name="Location">Maseru</string>
     <string name="the_skies">Mostly Sunny</string>
     <string name="temp">19°C</string>
+    <string name="demo_card_text">Yeah</string>
 </resources>

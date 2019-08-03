@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,9 +50,9 @@ public class XMLParser {
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the entry tag
+            
             if (name.equals("item")) {
-                dailyForecasts = readItem(parser);
+                dailyForecasts.add(readItem(parser));
             } else if (name.equals("image")) {
                 weatherIconURL = readImage(parser);
             } else {
@@ -99,9 +98,9 @@ public class XMLParser {
         return result;
     }
 
-    private static List<DailyForecast> readItem(XmlPullParser parser)
+    private static DailyForecast readItem(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        List<DailyForecast> forecasts = new ArrayList<>();
+        DailyForecast forecast = null;
         String description = "";
         String title = "";
         parser.require(XmlPullParser.START_TAG, ns, "item");
@@ -112,28 +111,29 @@ public class XMLParser {
             String name = parser.getName();
             if (name.equals("title")) {
                 title = readText(parser);
-            } else if (name.equals("description")){
+            }
+            else if (name.equals("description")){
                 description = readText(parser);
-            } else {
+            }
+            else {
                 skip(parser);
             }
 
             HashMap<String,String> properties = readProps(description);
             if (properties!=null){
-                String max_temp = properties.get("max_temp");
-                String min_temp = properties.get("min_temp");
-                String wind_speed = properties.get("wind_speed");
-                String wind_dir = properties.get("wind_dir");
+                String max_temp = properties.get("Maximum Temperature");
+                String min_temp = properties.get("Minimum Temperature");
+                String wind_speed = properties.get("Wind Speed");
+                String wind_dir = properties.get("Wind Direction");
                 String the_skies = readRain(title);
-                String visibility = properties.get("visibility");
-                String pressure = properties.get("pressure");
-                String humidity = properties.get("humidity");
-                forecasts.add(
-                        new DailyForecast(max_temp,min_temp,wind_speed,wind_dir,the_skies,visibility,
-                                pressure,humidity));
+                String visibility = properties.get("Visibility");
+                String pressure = properties.get("Pressure");
+                String humidity = properties.get("Humidity");
+                forecast = new DailyForecast(max_temp,min_temp,wind_speed,wind_dir,the_skies,visibility,
+                                pressure,humidity);
             }
         }
-        return forecasts;
+        return forecast;
     }
 
     private static String readRain(String title){
@@ -141,28 +141,25 @@ public class XMLParser {
             return "";
         }
         else{
-            String[] listOfProps = title.split(", ");
-            String[] today = listOfProps[0].split(":");
-            return today[1];
+            String[] listOfProps = title.split(",");
+            String[] today = listOfProps[0].trim().split(":");
+            return today[1].trim();
         }
     }
 
     private static HashMap<String,String> readProps(String des){
         HashMap<String,String> propsList = new HashMap<>();
-        List<String> keys = Arrays.asList("sunrise","wind_speed","humidity","wind_dir","pressure",
-                "sunset","max_temp","visibility","pollution","min_temp","uv_risk");
         if (des.equals("")){
             return null;
         }
         else {
-            String[] listOfProps = des.split(", ");
-            int length = listOfProps.length;
-            for (int i = 0; i < length; i++) {
-                String[] prop = listOfProps[i].split(":");
-                propsList.put(keys.get(i),prop[1]);
+            String[] listOfProps = des.split(",");
+            for (String prop : listOfProps) {
+                String[] property = prop.trim().split(":");
+                String key = property[0].trim();
+                String value = property[1].trim();
+                propsList.put(key, value);
             }
-        }
-        for (String prop: propsList.keySet()){
         }
         return propsList;
     }
