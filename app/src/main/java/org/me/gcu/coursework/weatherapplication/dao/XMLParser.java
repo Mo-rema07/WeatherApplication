@@ -121,14 +121,14 @@ public class XMLParser {
 
             HashMap<String,String> properties = readProps(description);
             if (properties!=null){
-                String max_temp = properties.get("Maximum Temperature");
-                String min_temp = properties.get("Minimum Temperature");
-                String wind_speed = properties.get("Wind Speed");
-                String wind_dir = properties.get("Wind Direction");
+                String max_temp = properties.get("Maximum Temperature")!= null ? properties.get("Maximum Temperature") : "---";
+                String min_temp = properties.get("Minimum Temperature")!= null ? properties.get("Minimum Temperature") : "---";
+                String wind_speed = properties.get("Wind Speed")!= null ? properties.get("Wind Speed") : "---";
+                String wind_dir = properties.get("Wind Direction")!= null ? properties.get("Wind Direction") : "---";
                 String the_skies = readRain(title);
-                String visibility = properties.get("Visibility");
-                String pressure = properties.get("Pressure");
-                String humidity = properties.get("Humidity");
+                String visibility = properties.get("Visibility")!= null ? properties.get("Visibility") : "---";
+                String pressure = properties.get("Pressure") != null ? properties.get("Pressure") : "---";
+                String humidity = properties.get("Humidity") != null ? properties.get("Humidity") : "---";
                 forecast = new DailyForecast(max_temp,min_temp,wind_speed,wind_dir,the_skies,visibility,
                                 pressure,humidity);
             }

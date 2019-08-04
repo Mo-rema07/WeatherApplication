@@ -1,6 +1,5 @@
 package org.me.gcu.coursework.weatherapplication;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.me.gcu.coursework.weatherapplication.dao.XMLParser;
 import org.me.gcu.coursework.weatherapplication.model.DailyForecast;
@@ -26,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    private static int locationIndex = 0;
     private static final String ENDPOINT = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/rss/3day/";
     private static final Map<String,String> LOCATION_IDS = new HashMap<String, String>()
     {{
@@ -39,30 +41,22 @@ public class MainActivity extends AppCompatActivity {
     }} ;
     ListView listView;
     DailyForecast[] listItem;
-    TextView day, locationName, temperature;
+    TextView day, locationName;
     WeatherLocation[] locationData;          //Stores the text to swipe.
     LayoutInflater inflater;    //Used to create individual pages
     ViewPager vp;
+    MaterialButton nextButton, prevButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         new LoadXML().execute();
-//            WeatherLocation location = WeatherLocationRepository.getInstance().getLocationList().get(0);
-
-//        locationData = (WeatherLocation[]) WeatherLocationRepository.getInstance().getLocationList().toArray();
-//        //get an inflater to be used to create single pages
-//        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        //Reference ViewPager defined in activity
-//        vp = (ViewPager) findViewById(R.id.viewPager);
-//        //set the adapter that will create the individual pages
-//        vp.setAdapter(new ViewPagerAdapter());
 
     }
 
     private void startUI(WeatherLocation location){
         String dayOfTheWeek = new SimpleDateFormat("EEEE dd, MMMM, yyyy", Locale.getDefault()).format(new Date());
-        TextView day = (TextView) findViewById(R.id.dayOfTheWeek);
+        day = (TextView) findViewById(R.id.dayOfTheWeek);
         day.setText(dayOfTheWeek);
         listView = (ListView) findViewById(R.id.listView);
         locationName = (TextView) findViewById(R.id.location);
@@ -76,6 +70,32 @@ public class MainActivity extends AppCompatActivity {
         final DailyForecastAdapter adapter;
         adapter = new DailyForecastAdapter(MainActivity.this, three_day_forecast);
         listView.setAdapter(adapter);
+        nextButton = (MaterialButton) findViewById(R.id.nextButton);
+        prevButton = (MaterialButton) findViewById(R.id.previousButton);
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int size1 = WeatherLocationRepository.getInstance().getLocationList().size();
+                locationIndex++;
+                if (locationIndex >= size1){
+                    locationIndex=0;
+                }
+                startUI(WeatherLocationRepository.getInstance().getLocationList().get(locationIndex));
+            }
+        });
+
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              int size1 = WeatherLocationRepository.getInstance().getLocationList().size();
+                locationIndex--;
+                if (locationIndex < 0){
+                    locationIndex=size1-1;
+                }
+                startUI(WeatherLocationRepository.getInstance().getLocationList().get(locationIndex));
+            }
+        });
     }
     private class LoadXML extends AsyncTask<String, Void, String> {
 
@@ -90,48 +110,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String result) {
-            setContentView(R.layout.view_location);
+            setContentView(R.layout.activity_main);
             WeatherLocation location = WeatherLocationRepository.getInstance().getLocationList().get(2);
             startUI(location);
-
-//            locationData = (WeatherLocation[]) WeatherLocationRepository.getInstance().getLocationList().toArray(new WeatherLocation[0]);
-//            //get an inflater to be used to create single pages
-//            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            //Reference ViewPager defined in activity
-//            vp = (ViewPager) findViewById(R.id.viewPager);
-//            //set the adapter that will create the individual pages
-//            vp.setAdapter(new ViewPagerAdapter());
-        }
-    }
-
-    private class ViewPagerAdapter extends PagerAdapter {
-        @Override
-        public int getCount() {
-            //Return total pages, here one for each data item
-            return locationData.length;
-        }
-
-        //Create the given page (indicated by position)
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View page = inflater.inflate(R.layout.view_location, null);
-            WeatherLocation locationDatum = locationData[position];
-            startUI(locationDatum);
-            ((ViewPager) container).addView(page, 0);
-            return page;
-        }
-
-        @Override
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            //See if object from instantiateItem is related to the given view
-            //required by API
-            return arg0 == (View) arg1;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            ((ViewPager) container).removeView((View) object);
-            object = null;
         }
     }
 }
