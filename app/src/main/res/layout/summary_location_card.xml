@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView android:id="@+id/materialCardView3"
-    android:layout_width="409dp"
-    android:layout_height="145dp"
-    android:minHeight="200dp"
-    tools:layout_editor_absoluteX="2dp"
-    tools:layout_editor_absoluteY="504dp"
+<!--<CardView android:id="@+id/materialCardView3"-->
+<!--android:layout_width="409dp"-->
+<!--android:layout_height="145dp"-->
+<!--android:minHeight="200dp"-->
+<!--tools:layout_editor_absoluteX="2dp"-->
+<!--tools:layout_editor_absoluteY="504dp"-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:tools="http://schemas.android.com/tools">-->
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:layout_marginLeft="@dimen/mtrl_card_spacing"
+    android:layout_marginTop="@dimen/mtrl_card_spacing"
+    android:layout_marginRight="@dimen/mtrl_card_spacing"
+    android:minHeight="200dp">
+    <TextView android:id="@+id/the_skies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/demo_card_text"
+        />
     <TextView
+        android:id="@+id/humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/demo_card_text" />
 </com.google.android.material.card.MaterialCardView>
+    <!--</CardView>-->
