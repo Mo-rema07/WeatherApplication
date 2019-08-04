@@ -2,11 +2,12 @@ package org.me.gcu.coursework.weatherapplication.repo;
 
 import org.me.gcu.coursework.weatherapplication.model.WeatherLocation;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherLocationRepository {
-    static List<WeatherLocation> locationList;
+    static ArrayList<WeatherLocation> locationList;
     private static final WeatherLocationRepository mInstance = new WeatherLocationRepository();
 
     private WeatherLocationRepository() {
@@ -21,7 +22,7 @@ public class WeatherLocationRepository {
         return locationList;
     }
 
-    public void setLocationList(List<WeatherLocation> locationList) {
+    public void setLocationList(ArrayList<WeatherLocation> locationList) {
         WeatherLocationRepository.locationList = locationList;
     }
 
