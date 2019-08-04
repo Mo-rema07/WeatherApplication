@@ -2,12 +2,8 @@ package org.me.gcu.coursework.weatherapplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,10 +12,12 @@ import org.me.gcu.coursework.weatherapplication.model.DailyForecast;
 import org.me.gcu.coursework.weatherapplication.model.WeatherLocation;
 import org.me.gcu.coursework.weatherapplication.repo.WeatherLocationRepository;
 
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         put("Maseru", "932505");
     }} ;
     ListView listView;
-    TextView textView;
     DailyForecast[] listItem;
+    TextView day, locationName, temperature;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 "WebOS","Ubuntu","Windows7","Max OS X"};
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity);
+        setContentView(R.layout.activity_main);
 
         new LoadXML().execute();
 
@@ -70,9 +68,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String result) {
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd, MMMM, yyyy");
+            Date d = new Date();
+//            DateTimeFormatter dtf = new DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+//            LocalDateTime now = LocalDateTime.now();
+            String dayOfTheWeek = sdf.format(d);
+
+            WeatherLocation location = WeatherLocationRepository.getInstance().getLocationList().get(0);
             listView=(ListView)findViewById(R.id.listView);
-            textView=(TextView)findViewById(R.id.the_skies);
-            ArrayList<DailyForecast> three_day_forecast = (ArrayList<DailyForecast>) WeatherLocationRepository.getInstance().getLocationList().get(0).getThree_day_forecast();
+            day = (TextView)findViewById(R.id.day);
+            locationName = (TextView)findViewById(R.id.location);
+            temperature = (TextView)findViewById(R.id.temperature);
+            day.setText(dayOfTheWeek);
+            locationName.setText(location.getName());
+
+            ArrayList<DailyForecast> three_day_forecast = (ArrayList<DailyForecast>) location.getThree_day_forecast();
             int size = three_day_forecast.size();
             listItem = new DailyForecast[size];
             for (int i = 0; i < size; i++) {
@@ -80,15 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
             final DailyForecastAdapter adapter = new DailyForecastAdapter(MainActivity.this,three_day_forecast);
             listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    // TODO Auto-generated method stub
-                    DailyForecast value= (DailyForecast) adapter.getItem(position);
-                    Toast.makeText(getApplicationContext(),value.getThe_skies(),Toast.LENGTH_SHORT).show();
-
-                }
-            });
         }
     }
 

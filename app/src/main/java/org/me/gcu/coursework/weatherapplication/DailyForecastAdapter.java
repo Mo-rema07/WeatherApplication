@@ -37,8 +37,11 @@ public class DailyForecastAdapter extends ArrayAdapter {
         TextView textView = (TextView)listItem.findViewById(R.id.the_skies);
         textView.setText(forecast.getThe_skies());
 
-        TextView humidity = (TextView) listItem.findViewById(R.id.humidity);
-        humidity.setText(forecast.getHumidity());
+        TextView wind_speed = (TextView) listItem.findViewById(R.id.wind_speed);
+        wind_speed.setText(forecast.getWind_speed());
+
+        TextView temp = (TextView) listItem.findViewById(R.id.temperature);
+        temp.setText(forecast.getMax_temp());
 
         return listItem;
     }
