@@ -1,15 +1,15 @@
 package org.me.gcu.coursework.weatherapplication;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
@@ -96,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
                 startUI(WeatherLocationRepository.getInstance().getLocationList().get(locationIndex));
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                viewDetailed(position);
+            }
+        });
+    }
+
+    public void viewDetailed(int position){
+        Intent intent = new Intent(MainActivity.this, DetailedView.class);
+        intent.putExtra("position", position);
+        MainActivity.this.startActivity(intent);
     }
     private class LoadXML extends AsyncTask<String, Void, String> {
 
@@ -120,3 +132,5 @@ public class MainActivity extends AppCompatActivity {
 
 //TODO: Make sure all the static fields and methods need to be static
 //TODO: Clean up comments
+
+
